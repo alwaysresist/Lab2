@@ -10,7 +10,7 @@ namespace Task3
     {
         static void Main(string[] args)
         {
-            string first = "3F";
+            string first = "-3а-F";
             string second = "5b";
 
             string sum = NumberSystem16.Sum(first, second);

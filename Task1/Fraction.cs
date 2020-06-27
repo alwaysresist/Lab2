@@ -8,21 +8,21 @@ namespace Task1
 {
     public class Fraction
     {
-        private int num;
-        private int den;
+        private int numerator;
+        private int denominator;
 
         public Fraction()
         {
-            num = 0;
-            den = 1;
+            numerator = 0;
+            denominator = 1;
         }
 
-        public Fraction(int numerator, int denominator)
+        public Fraction(int numerator, int denominator)//задаём дробь и сокращаем её
         {
             if (denominator != 0)
             {
-                this.num = numerator;
-                this.den = denominator;
+                this.numerator = numerator;
+                this.denominator = denominator;
                 Reduction();
             }
             else
@@ -31,29 +31,22 @@ namespace Task1
 
         public Fraction(Fraction obj)
         {
-            num = obj.num;
-            den = obj.den;
+            numerator = obj.numerator;
+            denominator = obj.denominator;
         }
 
         public int Numerator
         {
-            get => num;
+            get => numerator;
             set
             {
-                num = value;
+                numerator = value;
                 Reduction();
             }
         }
-        public int Denominator => den;
+        public int Denominator => denominator;
 
-        public void Exponentiation(int power)//функция возведения в степень
-        {
-            num = (int)Math.Pow(num, power);
-            den = (int)Math.Pow(den, power);
-            Reduction();
-        }
-
-        static private int GetNOD(int a, int b)
+        static private int GetNOD(int a, int b)//нод
         {
             while (a != 0 && b != 0)
             {
@@ -65,41 +58,48 @@ namespace Task1
             return a + b;
         }
 
-        static private int GetNOK(int a, int b)
+        static private int GetNOK(int a, int b)//нок
         {
             return a * (b / GetNOD(a, b));
         }
 
+        public void Exponentiation(int power)//функция возведения в степень
+        {
+            numerator = (int)Math.Pow(numerator, power);
+            denominator = (int)Math.Pow(denominator, power);
+            Reduction();
+        }
+
         private void Reduction()//функция сокращения дроби
         {
-            int NOD = GetNOD(num, den);
+            int NOD = GetNOD(numerator, denominator);
             if (NOD != 1)
             {
-                num /= NOD;
-                den /= NOD;
+                numerator /= NOD;
+                denominator /= NOD;
             }
-            if ((num < 0 && den < 0) || den < 0)
+            if ((numerator < 0 && denominator < 0) || denominator < 0)
             {
-                num = -num;
-                den = -den;
+                numerator = -numerator;
+                denominator = -denominator;
             }
         }
 
         static public Fraction operator +(Fraction first, Fraction second)
         {
-            if (first.den != second.den)//если знаменатели не равны
+            if (first.denominator != second.denominator)//если знаменатели не равны
             {
-                int nok = GetNOK(first.den, second.den);//ищем нок для знаменателей
-                return new Fraction(first.Numerator * (nok / first.den) + second.Numerator * (nok / second.den), nok);
+                int nok = GetNOK(first.denominator, second.denominator);//ищем нок для знаменателей
+                return new Fraction(first.Numerator * (nok / first.denominator) + second.Numerator * (nok / second.denominator), nok);
             }
             else//если знаменатели равны, то складываем числители
-                return new Fraction(first.Numerator + second.Numerator, first.den);
+                return new Fraction(first.Numerator + second.Numerator, first.denominator);
         }
 
         static public Fraction operator -(Fraction first, Fraction second)
         {
-            int nok = GetNOK(first.den, second.den);//ищем нок для знаменателей
-            Fraction Result = new Fraction(first.Numerator * (nok / first.den) - second.Numerator * (nok / second.den), nok);
+            int nok = GetNOK(first.denominator, second.denominator);//ищем нок для знаменателей
+            Fraction Result = new Fraction(first.Numerator * (nok / first.denominator) - second.Numerator * (nok / second.denominator), nok);
             return Result;
         }
 
@@ -108,16 +108,16 @@ namespace Task1
             Fraction first = new Fraction(_first);
             Fraction second = new Fraction(_second);
             int NOD1 = GetNOD(first.Numerator, second.Denominator);//проверяем, равен ли числитель первой дроби знаменателю второй
-            if (NOD1 != 1)
-            {//если не равен, то сокращяем их на нод
-                first.num /= NOD1;
-                second.den /= NOD1;
+            if (NOD1 != 1)//если не равен, то сокращяем их на нод
+            {
+                first.numerator /= NOD1;
+                second.denominator /= NOD1;
             }
             int NOD2 = GetNOD(first.Denominator, second.Numerator);
             if (NOD2 != 1)
             {
-                first.den /= NOD2;
-                second.num /= NOD2;
+                first.denominator /= NOD2;
+                second.numerator /= NOD2;
             }
             try
             {
@@ -133,7 +133,7 @@ namespace Task1
         {
             Fraction first = new Fraction(_first);
             Fraction second = new Fraction(_second);
-            if (second.num == 0)//если числитель второй дроби равен нулю, то делить нельзя
+            if (second.numerator == 0)//если числитель второй дроби равен нулю, то делить нельзя
             {
                 throw new DivideByZeroException();
             }
@@ -142,18 +142,18 @@ namespace Task1
                 int NOD1 = GetNOD(first.Numerator, second.Numerator);
                 if (NOD1 != 1)
                 {//если не равны, то сокращаем на нод
-                    first.num /= NOD1;
-                    second.num /= NOD1;
+                    first.numerator /= NOD1;
+                    second.numerator /= NOD1;
                 }
                 int NOD2 = GetNOD(first.Denominator, second.Denominator);
                 if (NOD2 != 1)
                 {
-                    first.den /= NOD2;
-                    second.den /= NOD2;
+                    first.denominator /= NOD2;
+                    second.denominator /= NOD2;
                 }
                 try
                 {
-                    return new Fraction(checked(first.num * second.den), checked(first.den * second.num));
+                    return new Fraction(checked(first.numerator * second.denominator), checked(first.denominator * second.numerator));
                 }
                 catch
                 {
@@ -168,7 +168,7 @@ namespace Task1
         {
             if (Denominator != 1)
             {
-                return Numerator.ToString() + "/" + den.ToString();
+                return Numerator.ToString() + "/" + denominator.ToString();
             }
             else
             {
@@ -176,12 +176,13 @@ namespace Task1
             }
         }
 
+
         public override bool Equals(object obj)
         {
             Fraction b = (Fraction)obj;
             return (this.Numerator == b.Numerator && this.Denominator == b.Denominator) ? true : false;
         }
-      
+      //операторы сравнения
         public static bool operator ==(Fraction first, Fraction second)
         { 
             return first.Equals(second);

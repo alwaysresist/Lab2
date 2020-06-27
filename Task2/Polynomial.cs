@@ -60,9 +60,8 @@ namespace Task2
             }
         }
 
-        
 
-        public double Calculate(double x)
+        public double Calculate(double x)//вычисление выражения
         {
             double result = 0;
             for (int i = 0; i <= degree; i++)
