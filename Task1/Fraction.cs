@@ -10,6 +10,7 @@ namespace Task1
     {
         private int numerator;
         private int denominator;
+        private int sign;
 
         public Fraction()
         {
@@ -27,6 +28,14 @@ namespace Task1
             }
             else
                 throw new ArgumentException("Невозможна дробь с нулевым знаменателем.");
+            if (numerator * denominator < 0)
+            {
+                this.sign = -1;
+            }
+            else
+            {
+                this.sign = 1;
+            }
         }
 
         public Fraction(Fraction obj)
@@ -72,19 +81,32 @@ namespace Task1
 
         private void Reduction()//функция сокращения дроби
         {
-            int NOD = GetNOD(numerator, denominator);
-            if (NOD != 1)
+            int max = 0;
+            if (numerator > denominator)
             {
-                numerator /= NOD;
-                denominator /= NOD;
+                max = Math.Abs(denominator);
             }
-            if ((numerator < 0 && denominator < 0) || denominator < 0)
+            else
             {
-                numerator = -numerator;
-                denominator = -denominator;
+                max = Math.Abs(numerator);
+            }                      
+            for (int i = max; i >= 2; i--)
+            {
+                
+                if ((numerator % i == 0) & (denominator % i == 0))
+                {
+                    numerator = (numerator / i);
+                    denominator = (denominator / i);
+                }
+
+            }
+            if ((denominator < 0))
+            {
+                numerator = -1 * (numerator);
+                denominator = Math.Abs(denominator);
             }
         }
-
+    
         static public Fraction operator +(Fraction first, Fraction second)
         {
             if (first.denominator != second.denominator)//если знаменатели не равны
@@ -180,9 +202,14 @@ namespace Task1
         public override bool Equals(object obj)
         {
             Fraction b = (Fraction)obj;
-            return (this.Numerator == b.Numerator && this.Denominator == b.Denominator) ? true : false;
+            return (this.Numerator == b.Numerator && this.Denominator == b.Denominator && this.sign==b.sign) ? true : false;
         }
-      //операторы сравнения
+        public override int GetHashCode()
+        {
+            return this.sign * (this.numerator * this.numerator + this.denominator * this.denominator);
+        }
+
+        //операторы сравнения
         public static bool operator ==(Fraction first, Fraction second)
         { 
             return first.Equals(second);
